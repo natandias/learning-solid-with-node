@@ -1,5 +1,12 @@
-import UserRoutes from './user.routes';
-import UserEntity from './user.entity';
-import UserInMemoryRepository from './userInMemory.repository';
+import UserController from './controllers/user.controller';
+import UserService from './user.service';
+import UserInMemoryRepository from './repositories/userInMemory.repository';
 
-export { UserRoutes, UserEntity, UserInMemoryRepository };
+const userFactory = () => {
+  const userRepository = new UserInMemoryRepository();
+  const userService = new UserService(userRepository);
+  const userController = new UserController(userService);
+  return userController;
+};
+
+export default userFactory;

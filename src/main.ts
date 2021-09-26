@@ -1,11 +1,8 @@
-import express from "express";
-import routes from "./routes";
-
-const app = express();
-app.use(routes);
+import app from './app';
 
 const PORT = 8081;
-  
-app.listen(PORT,() => {
-    console.log(`Running on port ${PORT}`);
-})
+
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Running on port ${PORT}`);
+});

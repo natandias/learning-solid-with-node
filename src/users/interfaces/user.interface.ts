@@ -1,5 +1,6 @@
 export default interface User {
+  id: string;
   name: string;
-  age: string;
+  age: number;
   city: string;
 }
