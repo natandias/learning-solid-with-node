@@ -127,11 +127,10 @@ describe('UserService', () => {
     });
     userService = new UserService(userRepository);
 
-    const id = '';
+    const id = '1234';
 
     const userUpdated = userService.updateUser({
       id,
-      name: 'Teste update',
     }) as User;
 
     expect(userUpdated).toBe(false);
