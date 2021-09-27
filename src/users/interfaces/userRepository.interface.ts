@@ -6,6 +6,6 @@ export default interface UserRepository {
   findAll: () => User[] | [];
   findOne: (id: string) => User | string;
   create: (user: CreateUser) => boolean;
-  update: (user: UpdateUser) => boolean;
+  update: (user: UpdateUser) => User | false;
   remove: (id: string) => boolean;
 }

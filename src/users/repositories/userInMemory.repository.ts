@@ -24,6 +24,8 @@ export default class UserInMemoryRepository implements UserRepository {
       city,
     });
 
+    if (!name || !age || !city) return false;
+
     this.usersList.push(user.get());
 
     return true;
@@ -35,7 +37,8 @@ export default class UserInMemoryRepository implements UserRepository {
       this.usersList = this.usersList.map(item =>
         item.id === id ? { ...item, ...otherValues } : item,
       );
-      return true;
+      const updatedUser = this.usersList.find(user => user.id === id)!;
+      return updatedUser;
     }
     return false;
   }

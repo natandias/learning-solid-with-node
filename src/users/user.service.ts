@@ -15,14 +15,19 @@ export default class UserService implements IUserService {
   }
 
   createUser(user: CreateUser) {
+    const { name, age, city } = user;
+    if (!name || !age || !city) return false;
     return this.userRepository.create(user);
   }
 
   updateUser(user: UpdateUser) {
+    const { name, age, city } = user;
+    if (!name && !age && !city) return false;
     return this.userRepository.update(user);
   }
 
   removeUser(id: string) {
+    if (!id) return false;
     return this.userRepository.remove(id);
   }
 }
