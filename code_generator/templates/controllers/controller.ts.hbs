@@ -1,0 +1,37 @@
+import { Request, Response } from 'express';
+import {{pascalCase name}}Service from '../interfaces/{{camelCase name}}Service.interface';
+
+export default class {{pascalCase name}}Controller {
+  constructor(private {{camelCase name}}Service: {{pascalCase name}}Service) {}
+
+  list = (req: Request, res: Response) => {
+    const {{camelCase name}}List = this.{{camelCase name}}Service.findAll{{pascalCase name}}s();
+    return res.json({{camelCase name}}List).status(200);
+  };
+
+  findOne = (req: Request, res: Response) => {
+    const { id } = req.params;
+    const {{camelCase name}} = this.{{camelCase name}}Service.find{{pascalCase name}}(id);
+    return res.json({{camelCase name}}).status(202);
+  };
+
+  create = (req: Request, res: Response) => {
+    const {{camelCase name}} = req.body;
+    const new{{pascalCase name}}Success = this.{{camelCase name}}Service.create{{pascalCase name}}({{camelCase name}});
+    return res.json(new{{pascalCase name}}Success).status(201);
+  };
+
+  update = (req: Request, res: Response) => {
+    const { id } = req.params;
+    const {{camelCase name}} = req.body;
+
+    this.{{camelCase name}}Service.update{{pascalCase name}}({ id, ...{{camelCase name}} });
+    return res.json().status(202);
+  };
+
+  remove = (req: Request, res: Response) => {
+    const { id } = req.params;
+    this.{{camelCase name}}Service.remove{{pascalCase name}}(id);
+    return res.json().status(202);
+  };
+}

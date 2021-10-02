@@ -1,0 +1,31 @@
+import {{pascalCase name}}Entity from '../entities/{{camelCase name}}.entity';
+import {{pascalCase name}} from '../interfaces/{{camelCase name}}.interface';
+import I{{pascalCase name}}Repository from '../interfaces/{{camelCase name}}Repository.interface';
+import Create{{pascalCase name}} from '../interfaces/dtos/create{{pascalCase name}}.dto';
+import Update{{pascalCase name}} from '../interfaces/dtos/update{{pascalCase name}}.dto';
+
+export default class {{pascalCase name}}Repository implements I{{pascalCase name}}Repository {
+  private {{camelCase name}}sList: {{pascalCase name}}[] = [];
+
+  private {{camelCase name}}Entity = new {{pascalCase name}}Entity();
+
+  findAll() {
+    return this.{{camelCase name}}sList;
+  }
+
+  findOne(id: string) {
+    return '{{camelCase name}} not found';
+  }
+
+  create({}: Create{{pascalCase name}}) {
+    return false;
+  }
+
+  update({ id, ...otherValues }: Update{{pascalCase name}}) {
+    return false;
+  }
+
+  remove(id: string) {
+    return false;
+  }
+}

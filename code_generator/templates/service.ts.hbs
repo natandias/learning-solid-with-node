@@ -1,0 +1,28 @@
+import Create{{pascalCase name}} from './interfaces/dtos/create{{pascalCase name}}.dto';
+import Update{{pascalCase name}} from './interfaces/dtos/update{{pascalCase name}}.dto';
+import {{pascalCase name}}Repository from './interfaces/{{camelCase name}}Repository.interface';
+import I{{pascalCase name}}Service from './interfaces/{{camelCase name}}Service.interface';
+
+export default class {{pascalCase name}}Service implements I{{pascalCase name}}Service {
+  constructor(private {{camelCase name}}Repository: {{pascalCase name}}Repository) {}
+
+  findAll{{pascalCase name}}s() {
+    return this.{{camelCase name}}Repository.findAll();
+  }
+
+  find{{pascalCase name}}(id: string) {
+    return this.{{camelCase name}}Repository.findOne(id);
+  }
+
+  create{{pascalCase name}}({{camelCase name}}): Create{{pascalCase name}} {
+    return this.{{camelCase name}}Repository.create({{camelCase name}});
+  }
+
+  update{{pascalCase name}}({{camelCase name}}): Update{{pascalCase name}} {
+    return this.{{camelCase name}}Repository.update({{camelCase name}});
+  }
+
+  remove{{pascalCase name}}(id: string) {
+    return this.{{camelCase name}}Repository.remove(id);
+  }
+}

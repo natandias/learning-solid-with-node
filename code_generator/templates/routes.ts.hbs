@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import {{pascalCase name}}Factory from './index';
+
+const {{pascalCase name}}Routes = Router();
+
+const {{camelCase name}}Controller = {{pascalCase name}}Factory();
+
+{{pascalCase name}}Routes.get('/', {{camelCase name}}Controller.list);
+{{pascalCase name}}Routes.get('/:id', {{camelCase name}}Controller.findOne);
+{{pascalCase name}}Routes.post('/', {{camelCase name}}Controller.create);
+{{pascalCase name}}Routes.patch('/:id', {{camelCase name}}Controller.update);
+{{pascalCase name}}Routes.delete('/:id', {{camelCase name}}Controller.remove);
+
+export default {{pascalCase name}}Routes;

@@ -1,0 +1,11 @@
+import {{pascalCase name}} from './{{camelCase name}}.interface';
+import Create{{pascalCase name}} from './dtos/create{{pascalCase name}}.dto';
+import Update{{pascalCase name}} from './dtos/update{{pascalCase name}}.dto';
+
+export default interface {{pascalCase name}}Repository {
+  findAll: () => {{pascalCase name}}[] | [];
+  findOne: (id: string) => {{pascalCase name}} | string;
+  create: ({{camelCase name}}: Create{{pascalCase name}}) => boolean;
+  update: ({{camelCase name}}: Update{{pascalCase name}}) => {{pascalCase name}} | false;
+  remove: (id: string) => boolean;
+}

@@ -10,6 +10,10 @@ Cada módulo dessa aplicação é dividido em:
 - Serviços (services)
 - Rotas (routes)
 
+Cada módulo é identificado pelo nome da entidade a que ele se relaciona e fica localizado dentro do diretório `src` em um diretório com o nome da entidade, ex: `users`.
+
+Para criar o boilerplate de um módulo automaticamente, use o comando `yarn generate nome_do_módulo`. Coloque o nome no singular, ex: `school`.
+
 ## Descrição do fluxo
 
 O fluxo em cada módulo acontece da seguinte maneira:
@@ -25,4 +29,4 @@ O fluxo em cada módulo acontece da seguinte maneira:
 
 ## Comentários adicionais
 
-A estrutura desses módulos tenta, ao máximo, atender os príncipios SOLID, como *Substituição de Liskov*, *Inversão de Dependências*, apesar disso, se trata de um primeiro contato prático com esses princípios, o que significa que provavelmente, ela falha em alguns desses princípios, e que pode ser melhorado ainda.
+A estrutura desses módulos tenta, ao máximo, atender os príncipios SOLID, como *Substituição de Liskov*, *Inversão de Dependências*, apesar disso, se trata de um primeiro contato prático com esses princípios, o que significa que provavelmente, ela falha em alguns desses princípios, e que pode ser melhorada ainda.

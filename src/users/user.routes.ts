@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import userFactory from './index';
+import UserFactory from './index';
 
 const UserRoutes = Router();
 
-const userController = userFactory();
+const userController = UserFactory();
 
 UserRoutes.get('/', userController.list);
 UserRoutes.get('/:id', userController.findOne);

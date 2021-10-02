@@ -1,0 +1,12 @@
+import {{pascalCase name}}Controller from './controllers/{{camelCase name}}.controller';
+import {{pascalCase name}}Service from './{{camelCase name}}.service';
+import {{pascalCase name}}Repository from './repositories/{{camelCase name}}.repository';
+
+const {{camelCase name}}Factory = () => {
+  const {{camelCase name}}Repository = new {{pascalCase name}}Repository();
+  const {{camelCase name}}Service = new {{pascalCase name}}Service({{camelCase name}}Repository);
+  const {{camelCase name}}Controller = new {{pascalCase name}}Controller({{camelCase name}}Service);
+  return {{camelCase name}}Controller;
+};
+
+export default {{camelCase name}}Factory;
