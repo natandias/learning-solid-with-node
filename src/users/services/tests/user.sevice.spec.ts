@@ -1,10 +1,10 @@
-import IUserService from '../interfaces/userService.interface';
-import IUserRepository from '../interfaces/userRepository.interface';
+import IUserService from '../../interfaces/userService.interface';
+import IUserRepository from '../../interfaces/userRepository.interface';
 import UserService from '../user.service';
-import UserInMemoryRepository from '../repositories/userInMemory.repository';
-import User from '../interfaces/user.interface';
-import CreateUser from '../interfaces/dtos/createUser.dto';
-import UpdateUser from '../interfaces/dtos/updateUser.dto';
+import UserInMemoryRepository from '../../repositories/userInMemory.repository';
+import User from '../../interfaces/user.interface';
+import CreateUser from '../../interfaces/dtos/createUser.dto';
+import UpdateUser from '../../interfaces/dtos/updateUser.dto';
 
 describe('UserService', () => {
   let userService: IUserService;
@@ -13,8 +13,6 @@ describe('UserService', () => {
 
   beforeAll(() => {
     userRepository = new UserInMemoryRepository();
-    // userService = new UserService(userRepository);
-    // userRepository.create(users[0]);
   });
 
   // List users

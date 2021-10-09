@@ -1,7 +1,7 @@
-import CreateUser from './interfaces/dtos/createUser.dto';
-import UpdateUser from './interfaces/dtos/updateUser.dto';
-import UserRepository from './interfaces/userRepository.interface';
-import IUserService from './interfaces/userService.interface';
+import CreateUser from '../interfaces/dtos/createUser.dto';
+import UpdateUser from '../interfaces/dtos/updateUser.dto';
+import UserRepository from '../interfaces/userRepository.interface';
+import IUserService from '../interfaces/userService.interface';
 
 export default class UserService implements IUserService {
   constructor(private userRepository: UserRepository) {}

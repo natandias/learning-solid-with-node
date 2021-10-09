@@ -9,6 +9,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "test": "jest",
+    "test:watch": "jest --watchAll",
     "generate": "yarn plop --plopfile ./code_generator/plopfile.ts"
   },
   "husky": {
