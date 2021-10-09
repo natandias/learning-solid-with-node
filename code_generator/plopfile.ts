@@ -84,6 +84,38 @@ export default function (plop: NodePlopAPI) {
         path: '../src/{{camelCase name}}/services/tests/{{camelCase name}}.service.spec.ts',
         templateFile: 'templates/services/tests/service.spec.ts.hbs',
       },
+      {
+        type: 'append',
+        path: '../src/routes.ts',
+        pattern:
+          "// New routes are import automatically here by plop (don't remove this comment)",
+        template:
+          "// New routes are import automatically here by plop (don't remove this comment)",
+      },
+      {
+        type: 'append',
+        path: '../src/routes.ts',
+        pattern:
+          "// New routes are added automatically here by plop (don't remove this comment)",
+        template:
+          "// New routes are added automatically here by plop (don't remove this comment)",
+      },
+      {
+        type: 'modify',
+        path: '../src/routes.ts',
+        pattern:
+          "// New routes are import automatically here by plop (don't remove this comment)",
+        template:
+          "import {{pascalCase name}}Routes from './{{camelCase name}}/{{camelCase name}}.routes';",
+      },
+      {
+        type: 'modify',
+        path: '../src/routes.ts',
+        pattern:
+          "// New routes are added automatically here by plop (don't remove this comment)",
+        template:
+          "routes.use('/{{dashCase name}}', {{pascalCase name}}Routes);",
+      },
     ],
   });
 }
