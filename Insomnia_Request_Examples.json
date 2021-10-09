@@ -1,0 +1,201 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2021-10-09T20:08:07.829Z",
+  "__export_source": "insomnia.desktop.app:v2021.5.3",
+  "resources": [
+    {
+      "_id": "req_5b5e0eb40205414fb0213b68dcad1dfd",
+      "parentId": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "modified": 1633806759586,
+      "created": 1632396444124,
+      "url": "{{ _.baseURL }}/users",
+      "name": "List Users",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1632396444124,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "parentId": "wrk_9c779c375af04bc09c921f79d3765a6e",
+      "modified": 1633806748003,
+      "created": 1633806748003,
+      "name": "Users",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1633806748003,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_9c779c375af04bc09c921f79d3765a6e",
+      "parentId": null,
+      "modified": 1632394049215,
+      "created": 1632394049215,
+      "name": "simple-express-api",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_0e63a68faa1649b28686c801d92c6a16",
+      "parentId": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "modified": 1633810013027,
+      "created": 1632405505729,
+      "url": "{{ _.baseURL }}/users/",
+      "name": "Create User",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"teste\",\n\t\"age\": 19,\n\t\"city\": \"Belo Horizonte\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_d58c9423fe9c491aadeb20bac02f5e6c"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1632396444074,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_b614341b5e4d41d4a91e95400be3fb0f",
+      "parentId": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "modified": 1633806888576,
+      "created": 1632405144731,
+      "url": "{{ _.baseURL }}/users/84ddb3f4-49e7-4ca6-a0ee-48fb57cac529",
+      "name": "Find User",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1632396444024,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_12cbdc38537447058828333d43d7a4ec",
+      "parentId": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "modified": 1633810025950,
+      "created": 1632405523306,
+      "url": "{{ _.baseURL }}/users/84ddb3f4-49e7-4ca6-a0ee-48fb57cac529",
+      "name": "Update User",
+      "description": "",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n \"city\": \"Diamantina\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json",
+          "id": "pair_90018aeafc8e4a95adac44bcffabc7b7"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1632396443974,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_146ec626af9d4dd7a4b419385818ee94",
+      "parentId": "fld_46fbc058a4244bca97f1cdfaf5f9f237",
+      "modified": 1633806963031,
+      "created": 1632405549725,
+      "url": "{{ _.baseURL }}/users/84ddb3f4-49e7-4ca6-a0ee-48fb57cac529",
+      "name": "Delete User",
+      "description": "",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1632396443924,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_3ef9d69473ae08fa645ff5f6a128b368aad0579e",
+      "parentId": "wrk_9c779c375af04bc09c921f79d3765a6e",
+      "modified": 1632396461769,
+      "created": 1632394049225,
+      "name": "Base Environment",
+      "data": {
+        "baseURL": "localhost:8081"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "baseURL"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1632394049225,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_3ef9d69473ae08fa645ff5f6a128b368aad0579e",
+      "parentId": "wrk_9c779c375af04bc09c921f79d3765a6e",
+      "modified": 1632394049226,
+      "created": 1632394049226,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "spc_50edb09214194cf4a465884378fcef13",
+      "parentId": "wrk_9c779c375af04bc09c921f79d3765a6e",
+      "modified": 1632394049217,
+      "created": 1632394049217,
+      "fileName": "simple-express-api",
+      "contents": "",
+      "contentType": "yaml",
+      "_type": "api_spec"
+    }
+  ]
+}
