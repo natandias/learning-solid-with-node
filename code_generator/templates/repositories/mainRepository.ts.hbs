@@ -5,16 +5,16 @@ import Create{{pascalCase name}} from '../interfaces/dtos/create{{pascalCase nam
 import Update{{pascalCase name}} from '../interfaces/dtos/update{{pascalCase name}}.dto';
 
 export default class {{pascalCase name}}Repository implements I{{pascalCase name}}Repository {
-  private {{camelCase name}}sList: {{pascalCase name}}[] = [];
+  private {{camelCase name}}List: {{pascalCase name}}[] = [];
 
   private {{camelCase name}}Entity = new {{pascalCase name}}Entity();
 
   findAll() {
-    return this.{{camelCase name}}sList;
+    return this.{{camelCase name}}List;
   }
 
   findOne(id: string) {
-    return '{{camelCase name}} not found';
+    return '{{pascalCase name}} not found';
   }
 
   create({}: Create{{pascalCase name}}) {
@@ -22,6 +22,16 @@ export default class {{pascalCase name}}Repository implements I{{pascalCase name
   }
 
   update({ id, ...otherValues }: Update{{pascalCase name}}) {
+    const {{camelCase name}}Exists = this.findOne(id);
+    if ({{camelCase name}}Exists) {
+      this.{{camelCase name}}List = this.{{camelCase name}}List.map(item =>
+        item.id === id ? { ...item, ...otherValues } : item,
+      );
+      const updated{{pascalCase name}} = this.schoolsList.find(
+        {{camelCase name}} => {{camelCase name}}.id === id,
+      );
+      return updated{{pascalCase name}} || false;
+    }
     return false;
   }
 

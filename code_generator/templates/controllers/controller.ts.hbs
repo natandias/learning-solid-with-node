@@ -5,7 +5,7 @@ export default class {{pascalCase name}}Controller {
   constructor(private {{camelCase name}}Service: {{pascalCase name}}Service) {}
 
   list = (req: Request, res: Response) => {
-    const {{camelCase name}}List = this.{{camelCase name}}Service.findAll{{pascalCase name}}s();
+    const {{camelCase name}}List = this.{{camelCase name}}Service.findAll{{pascalCase name}}();
     return res.json({{camelCase name}}List).status(200);
   };
 

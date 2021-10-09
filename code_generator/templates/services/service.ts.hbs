@@ -6,7 +6,7 @@ import I{{pascalCase name}}Service from '../interfaces/{{camelCase name}}Service
 export default class {{pascalCase name}}Service implements I{{pascalCase name}}Service {
   constructor(private {{camelCase name}}Repository: {{pascalCase name}}Repository) {}
 
-  findAll{{pascalCase name}}s() {
+  findAll{{pascalCase name}}() {
     return this.{{camelCase name}}Repository.findAll();
   }
 
@@ -14,11 +14,11 @@ export default class {{pascalCase name}}Service implements I{{pascalCase name}}S
     return this.{{camelCase name}}Repository.findOne(id);
   }
 
-  create{{pascalCase name}}({{camelCase name}}): Create{{pascalCase name}} {
+  create{{pascalCase name}}({{camelCase name}}: Create{{pascalCase name}}) {
     return this.{{camelCase name}}Repository.create({{camelCase name}});
   }
 
-  update{{pascalCase name}}({{camelCase name}}): Update{{pascalCase name}} {
+  update{{pascalCase name}}({{camelCase name}}: Update{{pascalCase name}}) {
     return this.{{camelCase name}}Repository.update({{camelCase name}});
   }
 
