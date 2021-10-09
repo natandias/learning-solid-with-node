@@ -1,5 +1,5 @@
 import UserController from './controllers/user.controller';
-import UserService from './user.service';
+import UserService from './services/user.service';
 import UserInMemoryRepository from './repositories/userInMemory.repository';
 
 const UserFactory = () => {
