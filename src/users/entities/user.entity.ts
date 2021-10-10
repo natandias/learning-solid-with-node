@@ -18,7 +18,7 @@ class UserEntity {
     return this.get();
   }
 
-  get() {
+  private get() {
     return { id: this.id, name: this.name, age: this.age, city: this.city };
   }
 }

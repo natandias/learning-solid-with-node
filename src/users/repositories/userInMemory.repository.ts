@@ -18,13 +18,13 @@ export default class UserInMemoryRepository implements UserRepository {
   }
 
   create({ name, age, city }: CreateUser) {
+    if (!name || !age || !city) return false;
+
     const user = this.userEntity.create({
       name,
       age,
       city,
     });
-
-    if (!name || !age || !city) return false;
 
     this.usersList.push(user);
 
