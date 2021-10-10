@@ -5,20 +5,23 @@ import UserInMemoryRepository from '../../repositories/userInMemory.repository';
 import User from '../../interfaces/user.interface';
 import CreateUser from '../../interfaces/dtos/createUser.dto';
 import UpdateUser from '../../interfaces/dtos/updateUser.dto';
+import UserEntity from '../../entities/user.entity';
 
 describe('UserService', () => {
+  let userEntity: UserEntity;
   let userService: IUserService;
   let userRepository: IUserRepository;
   const users: User[] = [{ id: '1234', name: 'Test', age: 18, city: 'BH' }];
 
   beforeAll(() => {
-    userRepository = new UserInMemoryRepository();
+    userEntity = new UserEntity();
+    userRepository = new UserInMemoryRepository(userEntity);
+    userService = new UserService(userRepository);
   });
 
   // List users
   it('should return empty array when there are no users', () => {
     userRepository.findAll = jest.fn(() => []);
-    userService = new UserService(userRepository);
 
     const usersList = userService.findAllUsers();
     expect(usersList).toEqual([]);
@@ -27,7 +30,6 @@ describe('UserService', () => {
 
   it('should return a list of users', () => {
     userRepository.findAll = jest.fn(() => users);
-    userService = new UserService(userRepository);
 
     const usersList = userService.findAllUsers();
     expect(usersList).toEqual(users);
@@ -36,8 +38,8 @@ describe('UserService', () => {
 
   // Find user
   it('should return a user', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOne = jest.fn((id: string) => users[0]);
-    userService = new UserService(userRepository);
 
     const id = '1234';
     const user = userService.findUser(id);
@@ -49,20 +51,28 @@ describe('UserService', () => {
 
   // Create user
   it('should create a user if all properties are informed', () => {
-    userRepository.create = jest.fn((user: CreateUser) => true);
-    userService = new UserService(userRepository);
+    userRepository.create = jest.fn((user: CreateUser) => ({
+      id: '1234',
+      ...user,
+    }));
 
-    const isUserCreated = userService.createUser({
+    const userCreated = userService.createUser({
       name: 'Test',
       age: 18,
       city: 'BH',
     });
-    expect(isUserCreated).toBe(true);
+
+    expect(userCreated).toEqual({
+      id: '1234',
+      name: 'Test',
+      age: 18,
+      city: 'BH',
+    });
   });
 
   it('should not create a user if there are missing properties', () => {
-    userRepository.create = jest.fn((user: CreateUser) => true);
-    userService = new UserService(userRepository);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    userRepository.create = jest.fn((user: CreateUser) => false);
 
     const isUserCreated = userService.createUser({
       name: 'Test',
@@ -78,7 +88,6 @@ describe('UserService', () => {
       ...users[0],
       ...user,
     }));
-    userService = new UserService(userRepository);
 
     const id = '1234';
 
@@ -101,7 +110,6 @@ describe('UserService', () => {
       }
       return false;
     });
-    userService = new UserService(userRepository);
 
     const id = '';
 
@@ -123,7 +131,6 @@ describe('UserService', () => {
       }
       return false;
     });
-    userService = new UserService(userRepository);
 
     const id = '1234';
 
@@ -136,9 +143,10 @@ describe('UserService', () => {
 
   // Delete user
   it('should delete user', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOne = jest.fn((id: string) => users[0]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.remove = jest.fn((id: string) => true);
-    userService = new UserService(userRepository);
 
     const id = '1234';
     const userRemoved = userService.removeUser(id);
@@ -149,9 +157,10 @@ describe('UserService', () => {
   });
 
   it('should not delete user if no id is informed', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOne = jest.fn((id: string) => users[0]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.remove = jest.fn((id: string) => true);
-    userService = new UserService(userRepository);
 
     const id = '';
     const userRemoved = userService.removeUser(id);
