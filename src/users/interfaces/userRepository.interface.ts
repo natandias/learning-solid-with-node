@@ -5,7 +5,7 @@ import UpdateUser from './dtos/updateUser.dto';
 export default interface UserRepository {
   findAll: () => User[] | [];
   findOne: (id: string) => User | string;
-  create: (user: CreateUser) => boolean;
+  create: (user: CreateUser) => User | false;
   update: (user: UpdateUser) => User | false;
   remove: (id: string) => boolean;
 }

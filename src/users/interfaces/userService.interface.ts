@@ -5,7 +5,7 @@ import User from './user.interface';
 export default interface UserService {
   findAllUsers: () => User[] | [];
   findUser: (id: string) => User | string;
-  createUser: (user: CreateUser) => boolean;
+  createUser: (user: CreateUser) => User | boolean;
   updateUser: (user: UpdateUser) => User | false;
   removeUser: (name: string) => boolean;
 }

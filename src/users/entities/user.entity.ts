@@ -15,7 +15,7 @@ class UserEntity {
     this.age = age;
     this.city = city;
 
-    return this;
+    return this.get();
   }
 
   get() {

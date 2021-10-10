@@ -5,9 +5,9 @@ import CreateUser from '../interfaces/dtos/createUser.dto';
 import UpdateUser from '../interfaces/dtos/updateUser.dto';
 
 export default class UserInMemoryRepository implements UserRepository {
-  private usersList: User[] = [];
+  constructor(private userEntity: UserEntity) {}
 
-  private userEntity = new UserEntity();
+  private usersList: User[] = [];
 
   findAll() {
     return this.usersList;
@@ -26,29 +26,29 @@ export default class UserInMemoryRepository implements UserRepository {
 
     if (!name || !age || !city) return false;
 
-    this.usersList.push(user.get());
+    this.usersList.push(user);
 
-    return true;
+    return user;
   }
 
   update({ id, ...otherValues }: UpdateUser) {
-    const userExists = this.findOne(id);
-    if (userExists) {
-      this.usersList = this.usersList.map(item =>
-        item.id === id ? { ...item, ...otherValues } : item,
-      );
-      const updatedUser = this.usersList.find(user => user.id === id)!;
-      return updatedUser;
-    }
-    return false;
+    const user = this.findOne(id);
+
+    if (user === 'User not found') return false;
+
+    this.usersList = this.usersList.map(item =>
+      item.id === id ? { ...item, ...otherValues } : item,
+    );
+    const updatedUser = this.usersList.find(userm => userm.id === id)!;
+    return updatedUser;
   }
 
   remove(id: string) {
-    const userExists = this.findOne(id);
-    if (userExists) {
-      this.usersList = this.usersList.filter(item => item.id !== id);
-      return true;
-    }
-    return false;
+    const user = this.findOne(id);
+
+    if (user === 'User not found') return false;
+
+    this.usersList = this.usersList.filter(item => item.id !== id);
+    return true;
   }
 }
