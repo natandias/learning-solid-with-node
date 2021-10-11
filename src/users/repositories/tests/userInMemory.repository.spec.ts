@@ -13,7 +13,7 @@ describe('UserInMemoryRepository', () => {
   });
 
   // List
-  it('should return a list of users', () => {
+  it('should return a list of users', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
@@ -31,10 +31,10 @@ describe('UserInMemoryRepository', () => {
       city: 'Ouro Preto',
     };
 
-    userRepository.create(user1);
-    userRepository.create(user2);
+    await userRepository.createUser(user1);
+    await userRepository.createUser(user2);
 
-    const usersList = userRepository.find();
+    const usersList = await userRepository.findAllUsers();
     expect(usersList.length).toBe(2);
     expect(usersList[0]).toEqual({
       id: '1234',
@@ -47,13 +47,13 @@ describe('UserInMemoryRepository', () => {
     expect(userEntity.create).toBeCalledTimes(2);
   });
 
-  it('should return empty array when there are no users', () => {
-    const usersList = userRepository.find();
+  it('should return empty array when there are no users', async () => {
+    const usersList = await userRepository.findAllUsers();
     expect(usersList).toEqual([]);
   });
 
   // Find One
-  it('should return a user', () => {
+  it('should return a user', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
@@ -65,26 +65,26 @@ describe('UserInMemoryRepository', () => {
       city: 'Salvador',
     };
 
-    userRepository.create(user);
+    await userRepository.createUser(user);
 
-    const foundUser = userRepository.findOne('1234');
+    const foundUser = await userRepository.findOneUser('1234');
     expect(foundUser).toEqual({ id: '1234', ...user });
   });
 
-  it('should return error if user is not found', () => {
-    const user = userRepository.findOne('1234');
+  it('should return error if user is not found', async () => {
+    const user = await userRepository.findOneUser('1234');
     expect(user).toBe('User not found');
   });
 
   // Create
-  it('should create and return user', () => {
+  it('should create and return user', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
     }));
 
-    const userCreated = userRepository.create({
+    const userCreated = await userRepository.createUser({
       name: 'Jest',
       age: 20,
       city: 'Salvador',
@@ -98,13 +98,13 @@ describe('UserInMemoryRepository', () => {
     });
   });
 
-  it('should not create user if params are missing', () => {
+  it('should not create user if params are missing', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
     }));
 
-    const userCreated = userRepository.create({
+    const userCreated = await userRepository.createUser({
       name: 'Jest',
       age: 20,
       city: '',
@@ -114,40 +114,46 @@ describe('UserInMemoryRepository', () => {
   });
 
   // Update
-  it('should update user', () => {
+  it('should update user', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
     }));
 
-    const user = userRepository.create({
+    const user = await userRepository.createUser({
       name: 'Jest',
       age: 20,
       city: 'Diamantina',
     });
 
-    const userUpdated = userRepository.update({ id: '1234', name: 'Natan' });
+    const userUpdated = await userRepository.updateUser({
+      id: '1234',
+      name: 'Natan',
+    });
     expect(userUpdated).toEqual({ ...user, id: '1234', name: 'Natan' });
   });
 
-  it("should not update user if user doesn't exists", () => {
-    const userUpdated = userRepository.update({ id: '1234', name: 'Natan' });
+  it("should not update user if user doesn't exists", async () => {
+    const userUpdated = await userRepository.updateUser({
+      id: '1234',
+      name: 'Natan',
+    });
     expect(userUpdated).toBe(false);
   });
 
-  it("should return the same item if there aren't new data", () => {
+  it("should return the same item if there aren't new data", async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
     }));
 
-    const user = userRepository.create({
+    const user = await userRepository.createUser({
       name: 'Jest',
       age: 20,
       city: 'Diamantina',
     });
 
-    const userUpdated = userRepository.update({
+    const userUpdated = await userRepository.updateUser({
       id: '1234',
     });
 
@@ -155,24 +161,24 @@ describe('UserInMemoryRepository', () => {
   });
 
   // Remove
-  it('should remove user', () => {
+  it('should remove user', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
       id: '1234',
       ...user,
     }));
 
-    userRepository.create({
+    await userRepository.createUser({
       name: 'Jest',
       age: 20,
       city: 'Diamantina',
     });
 
-    const deletedUser = userRepository.remove('1234');
+    const deletedUser = await userRepository.removeUser('1234');
     expect(deletedUser).toBe(true);
   });
 
-  it("shouldn't remove user if it doesn't exists", () => {
-    const deletedUser = userRepository.remove('1234');
+  it("shouldn't remove user if it doesn't exists", async () => {
+    const deletedUser = await userRepository.removeUser('1234');
     expect(deletedUser).toBe(false);
   });
 });

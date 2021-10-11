@@ -3,9 +3,9 @@ import UpdateUser from './dtos/updateUser.dto';
 import User from './user.interface';
 
 export default interface UserService {
-  findAllUsers: () => User[] | [];
-  findUser: (id: string) => User | string;
-  createUser: (user: CreateUser) => User | boolean;
-  updateUser: (user: UpdateUser) => User | false;
-  removeUser: (name: string) => boolean;
+  findAllUsers: () => Promise<User[] | []>;
+  findUser: (id: string) => Promise<User | string>;
+  createUser: (user: CreateUser) => Promise<User | boolean>;
+  updateUser: (user: UpdateUser) => Promise<User | false>;
+  removeUser: (name: string) => Promise<boolean>;
 }

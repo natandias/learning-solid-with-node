@@ -4,20 +4,20 @@ import UserService from '../interfaces/userService.interface';
 export default class UserController {
   constructor(private userService: UserService) {}
 
-  list = (req: Request, res: Response) => {
-    const usersList = this.userService.findAllUsers();
+  list = async (req: Request, res: Response) => {
+    const usersList = await this.userService.findAllUsers();
     return res.json(usersList).status(200);
   };
 
-  findOne = (req: Request, res: Response) => {
+  findOne = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const user = this.userService.findUser(id);
+    const user = await this.userService.findUser(id);
     return res.json(user).status(202);
   };
 
-  create = (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     const user = req.body;
-    const newUserSuccess = this.userService.createUser(user);
+    const newUserSuccess = await this.userService.createUser(user);
     return res.json(newUserSuccess).status(201);
   };
 

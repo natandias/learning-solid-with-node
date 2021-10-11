@@ -9,46 +9,57 @@ export default class UserInMemoryRepository implements UserRepository {
 
   private usersList: User[] = [];
 
-  find() {
-    return this.usersList;
+  findAllUsers() {
+    return new Promise<User[]>(resolve => resolve(this.usersList));
   }
 
-  findOne(id: string) {
-    return this.usersList.find(user => user.id === id) || 'User not found';
-  }
-
-  create({ name, age, city }: CreateUser) {
-    if (!name || !age || !city) return false;
-
-    const user = this.userEntity.create({
-      name,
-      age,
-      city,
+  findOneUser(id: string) {
+    return new Promise<string | User>(resolve => {
+      const userFound = this.usersList.find(user => user.id === id);
+      if (userFound) {
+        resolve(userFound);
+      } else {
+        resolve('User not found');
+      }
     });
-
-    this.usersList.push(user);
-
-    return user;
   }
 
-  update({ id, ...otherValues }: UpdateUser) {
-    const user = this.findOne(id);
-
-    if (user === 'User not found') return false;
-
-    this.usersList = this.usersList.map(item =>
-      item.id === id ? { ...item, ...otherValues } : item,
-    );
-    const updatedUser = this.usersList.find(userm => userm.id === id)!;
-    return updatedUser;
+  createUser({ name, age, city }: CreateUser) {
+    return new Promise<false | User>(resolve => {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      if (!name || !age || !city) resolve(false);
+      const user = this.userEntity.create({
+        name,
+        age,
+        city,
+      });
+      this.usersList.push(user);
+      resolve(user);
+    });
   }
 
-  remove(id: string) {
-    const user = this.findOne(id);
+  async updateUser({ id, ...otherValues }: UpdateUser) {
+    const user = await this.findOneUser(id);
 
-    if (user === 'User not found') return false;
+    return new Promise<false | User>(resolve => {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      if (user === 'User not found') resolve(false);
+      this.usersList = this.usersList.map(item =>
+        item.id === id ? { ...item, ...otherValues } : item,
+      );
+      const updatedUser = this.usersList.find(userm => userm.id === id)!;
+      resolve(updatedUser);
+    });
+  }
 
-    this.usersList = this.usersList.filter(item => item.id !== id);
-    return true;
+  async removeUser(id: string) {
+    const user = await this.findOneUser(id);
+
+    return new Promise<boolean>(resolve => {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      if (user === 'User not found') resolve(false);
+      this.usersList = this.usersList.filter(item => item.id !== id);
+      resolve(true);
+    });
   }
 }

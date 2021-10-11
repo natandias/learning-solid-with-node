@@ -20,43 +20,54 @@ describe('UserService', () => {
   });
 
   // List users
-  it('should return empty array when there are no users', () => {
-    userRepository.find = jest.fn(() => []);
+  it('should return empty array when there are no users', async () => {
+    userRepository.findAllUsers = jest.fn(
+      () => new Promise(resolve => resolve([])),
+    );
 
-    const usersList = userService.findAllUsers();
+    const usersList = await userService.findAllUsers();
     expect(usersList).toEqual([]);
-    expect(userRepository.find).toHaveBeenCalledTimes(1);
+    expect(userRepository.findAllUsers).toHaveBeenCalledTimes(1);
   });
 
-  it('should return a list of users', () => {
-    userRepository.find = jest.fn(() => users);
+  it('should return a list of users', async () => {
+    userRepository.findAllUsers = jest.fn(
+      () => new Promise(resolve => resolve(users)),
+    );
 
-    const usersList = userService.findAllUsers();
+    const usersList = await userService.findAllUsers();
     expect(usersList).toEqual(users);
-    expect(userRepository.find).toHaveBeenCalledTimes(1);
+    expect(userRepository.findAllUsers).toHaveBeenCalledTimes(1);
   });
 
   // Find user
-  it('should return a user', () => {
+  it('should return a user', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.findOne = jest.fn((id: string) => users[0]);
+    userRepository.findOneUser = jest.fn(
+      (id: string) => new Promise(resolve => resolve(users[0])),
+    );
 
     const id = '1234';
-    const user = userService.findUser(id);
+    const user = await userService.findUser(id);
 
     expect(user).toEqual(users[0]);
-    expect(userRepository.findOne).toHaveBeenCalledWith(id);
-    expect(userRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(userRepository.findOneUser).toHaveBeenCalledWith(id);
+    expect(userRepository.findOneUser).toHaveBeenCalledTimes(1);
   });
 
   // Create user
-  it('should create a user if all properties are informed', () => {
-    userRepository.create = jest.fn((user: CreateUser) => ({
-      id: '1234',
-      ...user,
-    }));
+  it('should create a user if all properties are informed', async () => {
+    userRepository.createUser = jest.fn(
+      (user: CreateUser) =>
+        new Promise(resolve =>
+          resolve({
+            id: '1234',
+            ...user,
+          }),
+        ),
+    );
 
-    const userCreated = userService.createUser({
+    const userCreated = await userService.createUser({
       name: 'Test',
       age: 18,
       city: 'BH',
@@ -70,11 +81,13 @@ describe('UserService', () => {
     });
   });
 
-  it('should not create a user if there are missing properties', () => {
+  it('should not create a user if there are missing properties', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.create = jest.fn((user: CreateUser) => false);
+    userRepository.createUser = jest.fn(
+      (user: CreateUser) => new Promise(resolve => resolve(false)),
+    );
 
-    const isUserCreated = userService.createUser({
+    const isUserCreated = await userService.createUser({
       name: 'Test',
       age: 18,
       city: '',
@@ -83,89 +96,110 @@ describe('UserService', () => {
   });
 
   // Update user
-  it('should update user', () => {
-    userRepository.update = jest.fn((user: UpdateUser) => ({
-      ...users[0],
-      ...user,
-    }));
+  it('should update user', async () => {
+    userRepository.updateUser = jest.fn(
+      (user: UpdateUser) =>
+        new Promise(resolve =>
+          resolve({
+            ...users[0],
+            ...user,
+          }),
+        ),
+    );
 
     const id = '1234';
 
-    const userUpdated = userService.updateUser({
+    const userUpdated = (await userService.updateUser({
       id,
       name: 'Teste update',
-    }) as User;
+    })) as User;
 
     expect(userUpdated).toBeTruthy();
     expect(userUpdated.name).toEqual('Teste update');
   });
 
-  it('should not update user if user are not found', () => {
-    userRepository.update = jest.fn((user: UpdateUser) => {
-      if (users[0].id === user.id) {
-        return {
-          ...users[0],
-          ...user,
-        };
-      }
-      return false;
-    });
+  it('should not update user if user is not found', async () => {
+    userRepository.updateUser = jest.fn(
+      (user: UpdateUser) =>
+        new Promise((resolve) => {
+          if (users[0].id === user.id) {
+            resolve({
+              ...users[0],
+              ...user,
+            });
+          }
+          // eslint-disable-next-line prefer-promise-reject-errors
+          resolve(false);
+        }),
+    );
 
     const id = '';
 
-    const userUpdated = userService.updateUser({
+    const userUpdated = (await userService.updateUser({
       id,
       name: 'Teste update',
-    }) as User;
+    })) as User;
 
+    expect(userRepository.updateUser).toBeCalledTimes(1);
     expect(userUpdated).toBe(false);
   });
 
-  it("should not update user if there aren't new data", () => {
-    userRepository.update = jest.fn((user: UpdateUser) => {
-      if (users[0].id === user.id) {
-        return {
-          ...users[0],
-          ...user,
-        };
-      }
-      return false;
-    });
+  it("should not update user if there aren't new data", async () => {
+    userRepository.updateUser = jest.fn(
+      (user: UpdateUser) =>
+        new Promise((resolve, reject) => {
+          if (users[0].id === user.id) {
+            resolve({
+              ...users[0],
+              ...user,
+            });
+            // eslint-disable-next-line prefer-promise-reject-errors
+          } else reject(false);
+        }),
+    );
 
     const id = '1234';
 
-    const userUpdated = userService.updateUser({
+    const userUpdated = (await userService.updateUser({
       id,
-    }) as User;
+    })) as User;
 
     expect(userUpdated).toBe(false);
   });
 
   // Delete user
-  it('should delete user', () => {
+  it('should delete user', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.findOne = jest.fn((id: string) => users[0]);
+    userRepository.findOneUser = jest.fn(
+      (id: string) => new Promise(resolve => resolve(users[0])),
+    );
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.remove = jest.fn((id: string) => true);
+    userRepository.removeUser = jest.fn(
+      (id: string) => new Promise(resolve => resolve(true)),
+    );
 
     const id = '1234';
-    const userRemoved = userService.removeUser(id);
+    const userRemoved = await userService.removeUser(id);
 
     expect(userRemoved).toBe(true);
-    expect(userRepository.remove).toHaveBeenCalledTimes(1);
-    expect(userRepository.remove).toHaveBeenCalledWith(id);
+    expect(userRepository.removeUser).toHaveBeenCalledTimes(1);
+    expect(userRepository.removeUser).toHaveBeenCalledWith(id);
   });
 
-  it('should not delete user if no id is informed', () => {
+  it('should not delete user if no id is informed', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.findOne = jest.fn((id: string) => users[0]);
+    userRepository.findOneUser = jest.fn(
+      (id: string) => new Promise(resolve => resolve(users[0])),
+    );
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    userRepository.remove = jest.fn((id: string) => true);
+    userRepository.removeUser = jest.fn(
+      (id: string) => new Promise(resolve => resolve(true)),
+    );
 
     const id = '';
-    const userRemoved = userService.removeUser(id);
+    const userRemoved = await userService.removeUser(id);
 
     expect(userRemoved).toBe(false);
-    expect(userRepository.remove).toHaveBeenCalledTimes(0);
+    expect(userRepository.removeUser).toHaveBeenCalledTimes(0);
   });
 });
