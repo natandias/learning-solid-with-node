@@ -1,5 +1,4 @@
 import express from 'express';
-import 'reflect-metadata';
 import routes from './routes';
 
 const PORT = 8081;

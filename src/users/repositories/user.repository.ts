@@ -7,15 +7,17 @@ import UpdateUserDto from '../interfaces/dtos/updateUser.dto';
 export default class UserRepository extends Repository<UserEntity> {
   async findAllUsers() {
     const users = await this.find({});
-    return users;
+    return users.map(user => ({ ...user, age: Number(user.age) }));
   }
 
   async findOneUser(id: string) {
     const user = await this.findOne(id);
-    return user || 'User not found';
+    return user ? { ...user, age: Number(user.age) } : 'User not found';
   }
 
   async createUser({ name, age, city }: CreateUserDto) {
+    if (!name || !age || !city) return false;
+
     const user = new UserEntity();
 
     user.name = name;
@@ -24,19 +26,22 @@ export default class UserRepository extends Repository<UserEntity> {
     user.city = city;
     await this.save(user);
 
-    return user;
+    return { ...user, age: Number(user.age) };
   }
 
-  updateUser({ id, name, age, city }: UpdateUserDto) {
-    return this.update(id, { name, age: String(age), city });
+  async updateUser({ id, ...otherFields }: UpdateUserDto) {
+    if (Object.keys(otherFields).length !== 0)
+      await this.update(id, otherFields);
+
+    const updatedUser = await this.findOneUser(id);
+    return updatedUser === 'User not found' ? false : updatedUser;
   }
 
   async removeUser(id: string) {
-    try {
-      await this.softDelete(id);
-      return true;
-    } catch (err) {
-      return false;
-    }
+    const user = await this.findOneUser(id);
+    if (user === 'User not found') return false;
+
+    await this.softDelete(id);
+    return true;
   }
 }

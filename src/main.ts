@@ -1,4 +1,5 @@
 import { createConnection } from 'typeorm';
+import 'reflect-metadata';
 import { SqliteTypeOrmConnection } from './database/connections';
 
 createConnection(SqliteTypeOrmConnection)
