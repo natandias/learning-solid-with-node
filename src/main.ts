@@ -1,8 +1,9 @@
-import app from './app';
+import { createConnection } from 'typeorm';
+import { SqliteTypeOrmConnection } from './database/connections';
 
-const PORT = 8081;
-
-app.listen(PORT, () => {
+createConnection(SqliteTypeOrmConnection)
+  .then(() => {
+    import('./app');
+  })
   // eslint-disable-next-line no-console
-  console.log(`Running on port ${PORT}`);
-});
+  .catch(err => console.log(err));

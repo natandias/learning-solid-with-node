@@ -7,7 +7,7 @@ export default class UserService implements IUserService {
   constructor(private userRepository: UserRepository) {}
 
   findAllUsers() {
-    return this.userRepository.findAll();
+    return this.userRepository.find();
   }
 
   findUser(id: string) {

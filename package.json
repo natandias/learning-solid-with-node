@@ -5,12 +5,15 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --clear src/main.ts",
-    "start": "tsc && node src/main.js",
+    "start": "ts-node src/main.ts",
     "lint": "eslint src/**/*.ts",
     "format": "eslint src/**/*.ts --fix",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "generate": "plop --plopfile ./code_generator/plopfile.ts"
+    "generate": "plop --plopfile ./code_generator/plopfile.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js --config ./dist/ormconfig.js",
+    "typeorm:migrate": "npm run typeorm migration:generate -- -n",
+    "typeorm:run": "npm run typeorm migration:run"
   },
   "husky": {
     "hooks": {
@@ -20,6 +23,9 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.38",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -28,7 +34,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.9.6",
+    "@types/node": "^16.10.3",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",

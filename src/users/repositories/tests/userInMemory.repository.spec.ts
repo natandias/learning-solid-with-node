@@ -1,5 +1,5 @@
 import UserInMemoryRepository from '../userInMemory.repository';
-import UserEntity from '../../entities/user.entity';
+import UserEntity from '../../entities/userInMemory.local.entity';
 import UserRepository from '../../interfaces/userRepository.interface';
 import CreateUser from '../../interfaces/dtos/createUser.dto';
 
@@ -34,7 +34,7 @@ describe('UserInMemoryRepository', () => {
     userRepository.create(user1);
     userRepository.create(user2);
 
-    const usersList = userRepository.findAll();
+    const usersList = userRepository.find();
     expect(usersList.length).toBe(2);
     expect(usersList[0]).toEqual({
       id: '1234',
@@ -48,7 +48,7 @@ describe('UserInMemoryRepository', () => {
   });
 
   it('should return empty array when there are no users', () => {
-    const usersList = userRepository.findAll();
+    const usersList = userRepository.find();
     expect(usersList).toEqual([]);
   });
 

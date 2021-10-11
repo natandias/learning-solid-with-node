@@ -1,4 +1,4 @@
-import UserEntity from '../entities/user.entity';
+import UserEntity from '../entities/userInMemory.local.entity';
 import User from '../interfaces/user.interface';
 import UserRepository from '../interfaces/userRepository.interface';
 import CreateUser from '../interfaces/dtos/createUser.dto';
@@ -9,7 +9,7 @@ export default class UserInMemoryRepository implements UserRepository {
 
   private usersList: User[] = [];
 
-  findAll() {
+  find() {
     return this.usersList;
   }
 

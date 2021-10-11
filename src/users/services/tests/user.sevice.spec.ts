@@ -5,7 +5,7 @@ import UserInMemoryRepository from '../../repositories/userInMemory.repository';
 import User from '../../interfaces/user.interface';
 import CreateUser from '../../interfaces/dtos/createUser.dto';
 import UpdateUser from '../../interfaces/dtos/updateUser.dto';
-import UserEntity from '../../entities/user.entity';
+import UserEntity from '../../entities/userInMemory.local.entity';
 
 describe('UserService', () => {
   let userEntity: UserEntity;
@@ -21,19 +21,19 @@ describe('UserService', () => {
 
   // List users
   it('should return empty array when there are no users', () => {
-    userRepository.findAll = jest.fn(() => []);
+    userRepository.find = jest.fn(() => []);
 
     const usersList = userService.findAllUsers();
     expect(usersList).toEqual([]);
-    expect(userRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(userRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should return a list of users', () => {
-    userRepository.findAll = jest.fn(() => users);
+    userRepository.find = jest.fn(() => users);
 
     const usersList = userService.findAllUsers();
     expect(usersList).toEqual(users);
-    expect(userRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(userRepository.find).toHaveBeenCalledTimes(1);
   });
 
   // Find user

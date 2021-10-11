@@ -1,4 +1,4 @@
-import UserEntity from '../user.entity';
+import UserEntity from '../userInMemory.local.entity';
 
 describe('UserEntity', () => {
   let userEntity: UserEntity;
