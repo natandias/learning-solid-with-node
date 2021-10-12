@@ -60,7 +60,7 @@ export default class UserController {
     try {
       const { id } = req.params;
       await this.userService.removeUser(id);
-      return res.status(httpStatus.OK).json();
+      return res.status(httpStatus.NO_CONTENT).json();
     } catch ({ errType, message }) {
       res.locals.errType = errType;
       res.locals.errMessage = message;
