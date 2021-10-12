@@ -46,11 +46,17 @@ describe('UserRepository', () => {
     expect(usersList.length).toBe(2);
 
     expect(usersList[0]).toHaveProperty('id');
+    expect(usersList[0]).toHaveProperty('createdAt');
+    expect(usersList[0]).toHaveProperty('updatedAt');
+    expect(usersList[0]).toHaveProperty('deletedAt');
     expect(usersList[0].name).toBe('jest');
     expect(usersList[0].age).toBe(20);
     expect(usersList[0].city).toBe('Diamantina');
 
     expect(usersList[1]).toHaveProperty('id');
+    expect(usersList[1]).toHaveProperty('createdAt');
+    expect(usersList[1]).toHaveProperty('updatedAt');
+    expect(usersList[1]).toHaveProperty('deletedAt');
     expect(usersList[1].name).toBe('jest2');
     expect(usersList[1].age).toBe(21);
     expect(usersList[1].city).toBe('Ouro Preto');
@@ -95,6 +101,9 @@ describe('UserRepository', () => {
     });
 
     expect(userCreated).toHaveProperty('id');
+    expect(userCreated).toHaveProperty('createdAt');
+    expect(userCreated).toHaveProperty('updatedAt');
+    expect(userCreated).toHaveProperty('deletedAt');
     expect(userCreated.name).toBe('Jest');
     expect(userCreated.age).toBe(20);
     expect(userCreated.city).toBe('Salvador');
@@ -107,7 +116,23 @@ describe('UserRepository', () => {
       city: '',
     });
 
-    expect(userCreated).toBe(false);
+    expect(userCreated).toBe('Missing params');
+  });
+
+  it('should not create user if it already exists another user with same name', async () => {
+    await userRepository.createUser({
+      name: 'Jest',
+      age: 20,
+      city: 'Montes Claros',
+    });
+
+    const userCreated2 = await userRepository.createUser({
+      name: 'Jest',
+      age: 21,
+      city: 'Belo Horizonte',
+    });
+
+    expect(userCreated2).toBe('User already exists');
   });
 
   // Update
@@ -124,6 +149,9 @@ describe('UserRepository', () => {
     });
 
     expect(userUpdated).toHaveProperty('id');
+    expect(userUpdated).toHaveProperty('createdAt');
+    expect(userUpdated).toHaveProperty('updatedAt');
+    expect(userUpdated).toHaveProperty('deletedAt');
     expect(userUpdated.name).toBe('Natan');
     expect(userUpdated.age).toBe(20);
     expect(userUpdated.city).toBe('Diamantina');
@@ -148,7 +176,11 @@ describe('UserRepository', () => {
       id: user.id,
     });
 
+    expect(userUpdated).toBeTruthy();
     expect(userUpdated).toHaveProperty('id');
+    expect(userUpdated).toHaveProperty('createdAt');
+    expect(userUpdated).toHaveProperty('updatedAt');
+    expect(userUpdated).toHaveProperty('deletedAt');
     expect(userUpdated.name).toBe('Jest');
     expect(userUpdated.age).toBe(20);
     expect(userUpdated.city).toBe('Diamantina');
@@ -163,7 +195,9 @@ describe('UserRepository', () => {
     });
 
     const deletedUser = await userRepository.removeUser(newUser.id);
+    const findDeletedUser = await userRepository.findOneUser(newUser.id);
     expect(deletedUser).toBe(true);
+    expect(findDeletedUser).toBe('User not found');
   });
 
   it("shouldn't remove user if it doesn't exists", async () => {

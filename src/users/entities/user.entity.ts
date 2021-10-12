@@ -9,7 +9,7 @@ export default class UserEntity {
   name: string;
 
   @Column('text')
-  age: string;
+  age: number;
 
   @Column('text')
   city: string;

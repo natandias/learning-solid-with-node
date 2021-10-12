@@ -9,4 +9,5 @@ const SqliteTypeOrmConnection: ConnectionOptions = {
   logging: false,
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { SqliteTypeOrmConnection };

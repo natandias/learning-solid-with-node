@@ -14,8 +14,14 @@ describe('UserEntity', () => {
     });
 
     expect(user).toHaveProperty('id');
+    expect(user).toHaveProperty('createdAt');
+    expect(user).toHaveProperty('updatedAt');
+    expect(user).toHaveProperty('deletedAt');
     expect(user.name).toBe('Jest');
     expect(user.age).toBe(28);
     expect(user.city).toBe('Salvador');
+    expect(user.createdAt).toBeTruthy();
+    expect(user.updatedAt).toBeTruthy();
+    expect(user.deletedAt).toBeFalsy();
   });
 });

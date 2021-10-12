@@ -18,7 +18,7 @@ export default class UserService implements IUserService {
 
   async createUser(user: CreateUser) {
     const { name, age, city } = user;
-    if (!name || !age || !city) return false;
+    if (!name || !age || !city) return 'Missing params';
     const userCreated = await this.userRepository.createUser(user);
     return userCreated;
   }

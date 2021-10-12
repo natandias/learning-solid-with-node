@@ -82,9 +82,9 @@ describe('UserService', () => {
   });
 
   it('should not create a user if there are missing properties', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.createUser = jest.fn(
-      (user: CreateUser) => new Promise(resolve => resolve(false)),
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (user: CreateUser) => new Promise(resolve => resolve('Missing params')),
     );
 
     const isUserCreated = await userService.createUser({
@@ -92,7 +92,7 @@ describe('UserService', () => {
       age: 18,
       city: '',
     });
-    expect(isUserCreated).toBe(false);
+    expect(isUserCreated).toBe('Missing params');
   });
 
   // Update user
@@ -121,7 +121,7 @@ describe('UserService', () => {
   it('should not update user if user is not found', async () => {
     userRepository.updateUser = jest.fn(
       (user: UpdateUser) =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           if (users[0].id === user.id) {
             resolve({
               ...users[0],

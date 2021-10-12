@@ -2,24 +2,41 @@ import { v4 as uuidv4 } from 'uuid';
 import CreateUser from '../interfaces/dtos/createUser.dto';
 
 class UserEntity {
-  private id = uuidv4();
+  private id: string;
 
   private name = '';
 
-  private age = 0;
+  private age: number;
 
   private city = '';
 
+  private createdAt: Date;
+
+  private updatedAt: Date;
+
+  private deletedAt: Date | undefined;
+
   public create({ name, age, city }: CreateUser) {
+    this.id = uuidv4();
     this.name = name;
-    this.age = age;
+    this.age = Number(age);
     this.city = city;
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
 
     return this.get();
   }
 
   private get() {
-    return { id: this.id, name: this.name, age: this.age, city: this.city };
+    return {
+      id: this.id,
+      name: this.name,
+      age: this.age,
+      city: this.city,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      deletedAt: this.deletedAt,
+    };
   }
 }
 
