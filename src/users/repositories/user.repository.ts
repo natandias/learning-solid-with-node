@@ -19,16 +19,15 @@ export default class UserRepository extends Repository<UserEntity> {
 
   async findOneUser(id: string) {
     const user = await this.findOne(id);
-    return user
-      ? { ...user, id: String(id), age: Number(user.age) }
-      : 'User not found';
+    if (!user) throw new Error('User not found');
+    return { ...user, id: String(id), age: Number(user.age) };
   }
 
   async createUser({ name, age, city }: CreateUserDto) {
-    if (!name || !age || !city) return 'Missing params';
+    if (!name || !age || !city) throw new Error('Missing params');
 
     const userExists = await this.findAllUsers({ name });
-    if (userExists.length > 0) return 'User already exists';
+    if (userExists.length > 0) throw new Error('User already exists');
 
     const user = new UserEntity();
 
@@ -42,17 +41,18 @@ export default class UserRepository extends Repository<UserEntity> {
   }
 
   async updateUser({ id, ...otherFields }: UpdateUserDto) {
+    await this.findOneUser(id);
+
     if (Object.keys(otherFields).length !== 0) {
       await this.update(id, otherFields);
     }
 
     const updatedUser = await this.findOneUser(id);
-    return updatedUser === 'User not found' ? false : updatedUser;
+    return updatedUser;
   }
 
   async removeUser(id: string) {
-    const user = await this.findOneUser(id);
-    if (user === 'User not found') return false;
+    await this.findOneUser(id);
 
     await this.softDelete(id);
     return true;

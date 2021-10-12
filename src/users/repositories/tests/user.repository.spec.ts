@@ -88,8 +88,9 @@ describe('UserRepository', () => {
   });
 
   it('should return error if user is not found', async () => {
-    const user = await userRepository.findOneUser('1234');
-    expect(user).toBe('User not found');
+    await expect(() => userRepository.findOneUser('1234')).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 
   // Create
@@ -110,13 +111,13 @@ describe('UserRepository', () => {
   });
 
   it('should not create user if params are missing', async () => {
-    const userCreated = await userRepository.createUser({
-      name: 'Jest',
-      age: 20,
-      city: '',
-    });
-
-    expect(userCreated).toBe('Missing params');
+    await expect(() =>
+      userRepository.createUser({
+        name: 'Jest',
+        age: 20,
+        city: '',
+      }),
+    ).rejects.toThrow(new Error('Missing params'));
   });
 
   it('should not create user if it already exists another user with same name', async () => {
@@ -126,13 +127,15 @@ describe('UserRepository', () => {
       city: 'Montes Claros',
     });
 
-    const userCreated2 = await userRepository.createUser({
+    const user2 = {
       name: 'Jest',
       age: 21,
       city: 'Belo Horizonte',
-    });
+    };
 
-    expect(userCreated2).toBe('User already exists');
+    await expect(() => userRepository.createUser(user2)).rejects.toThrow(
+      new Error('User already exists'),
+    );
   });
 
   // Update
@@ -158,11 +161,13 @@ describe('UserRepository', () => {
   });
 
   it("should not update user if user doesn't exists", async () => {
-    const userUpdated = await userRepository.updateUser({
+    const user = {
       id: '1234',
       name: 'Natan',
-    });
-    expect(userUpdated).toBe(false);
+    };
+    await expect(() => userRepository.updateUser(user)).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 
   it("should return the same item if there aren't new data", async () => {
@@ -195,13 +200,15 @@ describe('UserRepository', () => {
     });
 
     const deletedUser = await userRepository.removeUser(newUser.id);
-    const findDeletedUser = await userRepository.findOneUser(newUser.id);
     expect(deletedUser).toBe(true);
-    expect(findDeletedUser).toBe('User not found');
+    await expect(() => userRepository.findOneUser(newUser.id)).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 
   it("shouldn't remove user if it doesn't exists", async () => {
-    const deletedUser = await userRepository.removeUser('1234');
-    expect(deletedUser).toBe(false);
+    await expect(() => userRepository.removeUser('1234')).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 });

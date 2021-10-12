@@ -47,8 +47,8 @@ export default class UserController {
       const { id } = req.params;
       const user = req.body;
 
-      await this.userService.updateUser({ id, ...user });
-      return res.status(httpStatus.OK).json();
+      const userUpdated = await this.userService.updateUser({ id, ...user });
+      return res.status(httpStatus.OK).json(userUpdated);
     } catch ({ errType, message }) {
       res.locals.errType = errType;
       res.locals.errMessage = message;
