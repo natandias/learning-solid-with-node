@@ -153,8 +153,9 @@ describe('UserInMemoryRepository', () => {
   });
 
   it('should return error if user is not found', async () => {
-    const user = await userRepository.findOneUser('1234');
-    expect(user).toBe('User not found');
+    await expect(() => userRepository.findOneUser('1234')).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 
   // Create
@@ -194,13 +195,13 @@ describe('UserInMemoryRepository', () => {
       ...user,
     }));
 
-    const userCreated = await userRepository.createUser({
-      name: 'Jest',
-      age: 20,
-      city: '',
-    });
-
-    expect(userCreated).toBe('Missing params');
+    expect(
+      userRepository.createUser({
+        name: 'Jest',
+        age: 20,
+        city: '',
+      }),
+    ).rejects.toThrow('Missing params');
   });
 
   it('should not create user if it already exists another user with same name', async () => {
@@ -218,13 +219,15 @@ describe('UserInMemoryRepository', () => {
       city: 'Montes Claros',
     });
 
-    const userCreated2 = await userRepository.createUser({
+    const user2 = {
       name: 'Jest',
       age: 21,
       city: 'Belo Horizonte',
-    });
+    };
 
-    expect(userCreated2).toBe('User already exists');
+    expect(userRepository.createUser(user2)).rejects.toThrow(
+      'User already exists',
+    );
   });
 
   // Update
@@ -258,11 +261,12 @@ describe('UserInMemoryRepository', () => {
   });
 
   it("should not update user if user doesn't exists", async () => {
-    const userUpdated = await userRepository.updateUser({
-      id: '1234',
-      name: 'Natan',
-    });
-    expect(userUpdated).toBe(false);
+    await expect(() =>
+      userRepository.updateUser({
+        id: '12345',
+        name: 'Natan',
+      }),
+    ).rejects.toThrow(new Error('User not found'));
   });
 
   it("should return the same item if there aren't new data", async () => {
@@ -310,13 +314,21 @@ describe('UserInMemoryRepository', () => {
     });
 
     const deletedUser = await userRepository.removeUser('1234');
-    const findDeletedUser = await userRepository.findOneUser('1234');
     expect(deletedUser).toBe(true);
-    expect(findDeletedUser).toBe('User not found');
+    expect(userRepository.findOneUser('1234')).rejects.toThrow(
+      'User not found',
+    );
   });
 
   it("shouldn't remove user if it doesn't exists", async () => {
-    const deletedUser = await userRepository.removeUser('1234');
-    expect(deletedUser).toBe(false);
+    userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (id: string) =>
+        new Promise((resolve, reject) => reject(new Error('User not found'))),
+    );
+
+    await expect(() => userRepository.removeUser('1234')).rejects.toThrow(
+      new Error('User not found'),
+    );
   });
 });

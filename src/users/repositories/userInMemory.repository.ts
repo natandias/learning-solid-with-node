@@ -42,25 +42,25 @@ export default class UserInMemoryRepository implements UserRepository {
   }
 
   findOneUser(id: string) {
-    return new Promise<'User not found' | User>(resolve => {
+    return new Promise<'User not found' | User>((resolve, reject) => {
       const userFound = this.usersList.find(
         user => user.id === id && !user.deletedAt,
       );
       if (userFound) {
         resolve(userFound);
       } else {
-        resolve('User not found');
+        reject(new Error('User not found'));
       }
     });
   }
 
   createUser({ name, age, city }: CreateUser) {
-    return new Promise<string | User>(resolve => {
-      if (!name || !age || !city) resolve('Missing params');
+    return new Promise<string | User>((resolve, reject) => {
+      if (!name || !age || !city) reject(new Error('Missing params'));
 
       this.findAllUsers({ name }).then(userExists => {
         if (userExists.length > 0) {
-          resolve('User already exists');
+          reject(new Error('User already exists'));
         } else {
           const user = this.userEntity.create({
             name,
@@ -75,10 +75,8 @@ export default class UserInMemoryRepository implements UserRepository {
   }
 
   async updateUser({ id, ...otherValues }: UpdateUser) {
-    const user = await this.findOneUser(id);
-
+    await this.findOneUser(id);
     return new Promise<false | User>(resolve => {
-      if (user === 'User not found') resolve(false);
       this.usersList = this.usersList.map(item =>
         item.id === id ? { ...item, ...otherValues } : item,
       );
@@ -88,10 +86,9 @@ export default class UserInMemoryRepository implements UserRepository {
   }
 
   async removeUser(id: string) {
-    const user = await this.findOneUser(id);
+    await this.findOneUser(id);
 
     return new Promise<boolean>(resolve => {
-      if (user === 'User not found') resolve(false);
       this.usersList = this.usersList.map(item =>
         item.id === id ? { ...item, deletedAt: new Date() } : item,
       );

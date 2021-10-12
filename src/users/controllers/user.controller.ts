@@ -1,37 +1,70 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { httpStatus } from '../../utils/httpCodes';
+import FindAllUsers from '../interfaces/dtos/findAllUsers.dto';
 import UserService from '../interfaces/userService.interface';
 
 export default class UserController {
   constructor(private userService: UserService) {}
 
-  list = async (req: Request, res: Response) => {
-    const usersList = await this.userService.findAllUsers();
-    return res.json(usersList).status(200);
+  list = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const params: FindAllUsers = req.body;
+      const usersList = await this.userService.findAllUsers(params);
+      return res.status(httpStatus.OK).json(usersList);
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 
-  findOne = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const user = await this.userService.findUser(id);
-    return res.json(user).status(202);
+  findOne = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = await this.userService.findUser(id);
+      return res.status(httpStatus.OK).json(user);
+    } catch ({ errType, message }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = message;
+      return next();
+    }
   };
 
-  create = async (req: Request, res: Response) => {
-    const user = req.body;
-    const newUserSuccess = await this.userService.createUser(user);
-    return res.json(newUserSuccess).status(201);
+  create = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.body;
+      const newUserSuccess = await this.userService.createUser(user);
+      return res.status(httpStatus.CREATED).json(newUserSuccess);
+    } catch ({ errType, message }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = message;
+      return next();
+    }
   };
 
-  update = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const user = req.body;
+  update = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const user = req.body;
 
-    this.userService.updateUser({ id, ...user });
-    return res.json().status(202);
+      await this.userService.updateUser({ id, ...user });
+      return res.status(httpStatus.OK).json();
+    } catch ({ errType, message }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = message;
+      return next();
+    }
   };
 
-  remove = (req: Request, res: Response) => {
-    const { id } = req.params;
-    this.userService.removeUser(id);
-    return res.json().status(202);
+  remove = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      await this.userService.removeUser(id);
+      return res.status(httpStatus.OK).json();
+    } catch ({ errType, message }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = message;
+      return next();
+    }
   };
 }

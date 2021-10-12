@@ -11,7 +11,17 @@ describe('UserService', () => {
   let userEntity: UserEntity;
   let userService: IUserService;
   let userRepository: IUserRepository;
-  const users: User[] = [{ id: '1234', name: 'Test', age: 18, city: 'BH' }];
+  const users: User[] = [
+    {
+      id: '1234',
+      name: 'Test',
+      age: 18,
+      city: 'BH',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: undefined,
+    },
+  ];
 
   beforeAll(() => {
     userEntity = new UserEntity();
@@ -40,10 +50,24 @@ describe('UserService', () => {
     expect(userRepository.findAllUsers).toHaveBeenCalledTimes(1);
   });
 
+  it('should throw a error when repository.findAllUsers rejects with an unknown error', async () => {
+    userRepository.findAllUsers = jest.fn(
+      () =>
+        new Promise((resolve, reject) =>
+          reject(new Error('Failed to connect to db')),
+        ),
+    );
+
+    await expect(() => userService.findAllUsers()).rejects.toThrow(
+      new Error('An unknown error occurred'),
+    );
+    expect(userRepository.findAllUsers).toHaveBeenCalledTimes(1);
+  });
+
   // Find user
   it('should return a user', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (id: string) => new Promise(resolve => resolve(users[0])),
     );
 
@@ -55,6 +79,33 @@ describe('UserService', () => {
     expect(userRepository.findOneUser).toHaveBeenCalledTimes(1);
   });
 
+  it("should throw a error when repository doesn't find user", async () => {
+    userRepository.findOneUser = jest.fn(
+      () =>
+        new Promise((resolve, reject) => reject(new Error('User not found'))),
+    );
+    const id = '1234';
+    await expect(() => userService.findUser(id)).rejects.toThrow(
+      new Error('User not found'),
+    );
+    expect(userRepository.findOneUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw a error when repository.findOneUser rejects with an unknown error', async () => {
+    userRepository.findOneUser = jest.fn(
+      () =>
+        new Promise((resolve, reject) =>
+          reject(new Error('Failed to connect to db')),
+        ),
+    );
+
+    const id = '123';
+    await expect(() => userService.findUser(id)).rejects.toThrow(
+      new Error('An unknown error occurred'),
+    );
+    expect(userRepository.findOneUser).toHaveBeenCalledTimes(1);
+  });
+
   // Create user
   it('should create a user if all properties are informed', async () => {
     userRepository.createUser = jest.fn(
@@ -62,6 +113,9 @@ describe('UserService', () => {
         new Promise(resolve =>
           resolve({
             id: '1234',
+            createdAt: users[0].createdAt,
+            updatedAt: users[0].updatedAt,
+            deletedAt: undefined,
             ...user,
           }),
         ),
@@ -78,21 +132,86 @@ describe('UserService', () => {
       name: 'Test',
       age: 18,
       city: 'BH',
+      createdAt: users[0].createdAt,
+      updatedAt: users[0].updatedAt,
+      deletedAt: undefined,
     });
   });
 
-  it('should not create a user if there are missing properties', async () => {
+  it('should throw a error if there are missing properties', async () => {
     userRepository.createUser = jest.fn(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (user: CreateUser) => new Promise(resolve => resolve('Missing params')),
+      (user: CreateUser) =>
+        new Promise((resolve, reject) => reject(new Error('Missing params'))),
     );
 
-    const isUserCreated = await userService.createUser({
+    const user = {
       name: 'Test',
       age: 18,
       city: '',
-    });
-    expect(isUserCreated).toBe('Missing params');
+    };
+
+    await expect(userService.createUser(user)).rejects.toThrow(
+      new Error('Missing params'),
+    );
+    expect(userRepository.createUser).not.toBeCalled();
+  });
+
+  it('should throw a error if userRepository.createUser says there are missing properties', async () => {
+    userRepository.createUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (user: CreateUser) =>
+        new Promise((resolve, reject) => reject(new Error('Missing params'))),
+    );
+
+    const user = {
+      name: 'Test',
+      age: 18,
+      city: '',
+    };
+
+    await expect(() => userService.createUser(user)).rejects.toThrow(
+      new Error('Missing params'),
+    );
+  });
+
+  it('should not create a user if it already exists', async () => {
+    userRepository.createUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (user: CreateUser) =>
+        new Promise((resolve, reject) => {
+          reject(new Error('User already exists'));
+        }),
+    );
+
+    const user = {
+      name: 'Test',
+      age: 18,
+      city: 'Ouro Preto',
+    };
+
+    await expect(() => userService.createUser(user)).rejects.toThrow(
+      new Error('User already exists'),
+    );
+  });
+
+  it('should throw a error when repository.createUser rejects with an unknown error', async () => {
+    userRepository.createUser = jest.fn(
+      () =>
+        new Promise((resolve, reject) =>
+          reject(new Error('Failed to connect to db')),
+        ),
+    );
+
+    const user = {
+      name: 'Test',
+      age: 18,
+      city: 'BH',
+    };
+    await expect(() => userService.createUser(user)).rejects.toThrow(
+      new Error('An unknown error occurred'),
+    );
+    expect(userRepository.createUser).toHaveBeenCalledTimes(1);
   });
 
   // Update user
@@ -120,28 +239,22 @@ describe('UserService', () => {
 
   it('should not update user if user is not found', async () => {
     userRepository.updateUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (user: UpdateUser) =>
-        new Promise(resolve => {
-          if (users[0].id === user.id) {
-            resolve({
-              ...users[0],
-              ...user,
-            });
-          }
-          // eslint-disable-next-line prefer-promise-reject-errors
-          resolve(false);
+        new Promise((resolve, reject) => {
+          reject(new Error('User not found'));
         }),
     );
 
-    const id = '';
-
-    const userUpdated = (await userService.updateUser({
-      id,
+    const user = {
+      id: '12345',
       name: 'Teste update',
-    })) as User;
+    };
 
+    await expect(() => userService.updateUser(user)).rejects.toThrow(
+      new Error('User not found'),
+    );
     expect(userRepository.updateUser).toBeCalledTimes(1);
-    expect(userUpdated).toBe(false);
   });
 
   it("should not update user if there aren't new data", async () => {
@@ -160,21 +273,40 @@ describe('UserService', () => {
 
     const id = '1234';
 
-    const userUpdated = (await userService.updateUser({
-      id,
-    })) as User;
+    await expect(() =>
+      userService.updateUser({
+        id,
+      }),
+    ).rejects.toThrow(new Error('Missing params'));
+  });
 
-    expect(userUpdated).toBe(false);
+  it('should throw error if userRepository.updateUser throw an undefined error', async () => {
+    userRepository.updateUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (user: UpdateUser) =>
+        new Promise((resolve, reject) => {
+          reject(new Error('Failed'));
+        }),
+    );
+
+    const user = {
+      id: 'abcd',
+      name: 'teste22',
+    };
+
+    await expect(() => userService.updateUser(user)).rejects.toThrow(
+      new Error('An unknown error occurred'),
+    );
   });
 
   // Delete user
   it('should delete user', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (id: string) => new Promise(resolve => resolve(users[0])),
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.removeUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (id: string) => new Promise(resolve => resolve(true)),
     );
 
@@ -187,19 +319,59 @@ describe('UserService', () => {
   });
 
   it('should not delete user if no id is informed', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (id: string) => new Promise(resolve => resolve(users[0])),
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     userRepository.removeUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (id: string) => new Promise(resolve => resolve(true)),
     );
 
     const id = '';
-    const userRemoved = await userService.removeUser(id);
-
-    expect(userRemoved).toBe(false);
+    await expect(() => userService.removeUser(id)).rejects.toThrow(
+      new Error('Missing params'),
+    );
     expect(userRepository.removeUser).toHaveBeenCalledTimes(0);
+  });
+
+  it("should throw an error if user doesn't exists", async () => {
+    userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (id: string) => new Promise(resolve => resolve(users[0])),
+    );
+    userRepository.removeUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (id: string) =>
+        new Promise((resolve, reject) => reject(new Error('User not found'))),
+    );
+
+    const id = '1234';
+
+    await expect(() => userService.removeUser(id)).rejects.toThrow(
+      new Error('User not found'),
+    );
+    expect(userRepository.removeUser).toHaveBeenCalledTimes(1);
+    expect(userRepository.removeUser).toHaveBeenCalledWith(id);
+  });
+
+  it('should throw an error if userRepository.removeUser throwns an unknown error', async () => {
+    userRepository.findOneUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (id: string) => new Promise(resolve => resolve(users[0])),
+    );
+    userRepository.removeUser = jest.fn(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (id: string) =>
+        new Promise((resolve, reject) => reject(new Error('Any error'))),
+    );
+
+    const id = '1234';
+
+    await expect(() => userService.removeUser(id)).rejects.toThrow(
+      new Error('An unknown error occurred'),
+    );
+    expect(userRepository.removeUser).toHaveBeenCalledTimes(1);
+    expect(userRepository.removeUser).toHaveBeenCalledWith(id);
   });
 });
