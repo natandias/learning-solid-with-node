@@ -28,7 +28,8 @@ export default class UserInMemoryRepository implements UserRepository {
         >;
         items = this.usersList.filter(item => {
           if (
-            keysOfParams.filter(key => item[key] === params[key]).length > 0 &&
+            keysOfParams.filter(key => item[key] === params[key]).length ===
+              keysOfParams.length &&
             !item.deletedAt
           ) {
             return true;

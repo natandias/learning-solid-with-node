@@ -58,6 +58,67 @@ describe('UserInMemoryRepository', () => {
     expect(userEntity.create).toBeCalledTimes(2);
   });
 
+  it('should return a list of users filtered by params', async () => {
+    userEntity.create = jest.fn((user: CreateUser) => ({
+      id: '1234',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+      deletedAt: undefined,
+      ...user,
+    }));
+
+    const user1 = {
+      name: 'jest',
+      age: 20,
+      city: 'Diamantina',
+    };
+
+    const user2 = {
+      name: 'jest2',
+      age: 21,
+      city: 'Ouro Preto',
+    };
+
+    await userRepository.createUser(user1);
+    await userRepository.createUser(user2);
+
+    const usersList = await userRepository.findAllUsers({
+      age: 21,
+    });
+
+    expect(usersList.length).toBe(1);
+    expect(usersList[0]).toEqual({
+      id: '1234',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+      deletedAt: undefined,
+      ...user2,
+    });
+    expect(userEntity.create).toBeCalledTimes(2);
+
+    const user3 = {
+      name: 'jest3',
+      age: 21,
+      city: 'Ouro Preto',
+    };
+
+    await userRepository.createUser(user3);
+
+    const usersList2 = await userRepository.findAllUsers({
+      age: 21,
+    });
+
+    expect(usersList2.length).toBe(2);
+    expect(usersList2[1]).toEqual({
+      id: '1234',
+      createdAt: currentDate,
+      updatedAt: currentDate,
+      deletedAt: undefined,
+      ...user3,
+    });
+    expect(userEntity.create).toBeCalledTimes(3);
+  });
+
   it('should return empty array when there are no users', async () => {
     const usersList = await userRepository.findAllUsers();
     expect(usersList).toEqual([]);
