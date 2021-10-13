@@ -1,9 +1,10 @@
 import Create{{pascalCase name}} from './dtos/create{{pascalCase name}}.dto';
 import Update{{pascalCase name}} from './dtos/update{{pascalCase name}}.dto';
+import FindAll{{pascalCase name}} from './dtos/findAll{{pascalCase name}}.dto';
 import {{pascalCase name}} from './{{camelCase name}}.interface';
 
 export default interface {{pascalCase name}}Service {
-  findAll{{pascalCase name}}: () => {{pascalCase name}}[] | [];
+  findAll{{pascalCase name}}: (params: FindAll{{pascalCase name}}) => {{pascalCase name}}[] | [];
   find{{pascalCase name}}: (id: string) => {{pascalCase name}} | string;
   create{{pascalCase name}}: ({{camelCase name}}: Create{{pascalCase name}}) => boolean;
   update{{pascalCase name}}: ({{camelCase name}}: Update{{pascalCase name}}) => {{pascalCase name}} | false;

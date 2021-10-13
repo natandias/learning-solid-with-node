@@ -1,37 +1,72 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import {{pascalCase name}}Service from '../interfaces/{{camelCase name}}Service.interface';
+import FindAll{{pascalCase name}} from '../interfaces/dtos/findAll{{pascalCase name}}.dto';
+import { httpStatus } from '../../utils/httpCodes';
 
 export default class {{pascalCase name}}Controller {
   constructor(private {{camelCase name}}Service: {{pascalCase name}}Service) {}
 
-  list = (req: Request, res: Response) => {
-    const {{camelCase name}}List = this.{{camelCase name}}Service.findAll{{pascalCase name}}();
-    return res.json({{camelCase name}}List).status(200);
+  list = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const params: FindAll{{pascalCase name}} = req.body;
+      const {{camelCase name}}List = this.{{camelCase name}}Service.findAll{{pascalCase name}}(params);
+      return res.status(httpStatus.OK).json({{camelCase name}}List);
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 
-  findOne = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const {{camelCase name}} = this.{{camelCase name}}Service.find{{pascalCase name}}(id);
-    return res.json({{camelCase name}}).status(202);
+  findOne = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const {{camelCase name}} = this.{{camelCase name}}Service.find{{pascalCase name}}(id);
+      return res.status(httpStatus.OK).json({{camelCase name}});
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 
-  create = (req: Request, res: Response) => {
-    const {{camelCase name}} = req.body;
-    const new{{pascalCase name}}Success = this.{{camelCase name}}Service.create{{pascalCase name}}({{camelCase name}});
-    return res.json(new{{pascalCase name}}Success).status(201);
+  create = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const {{camelCase name}} = req.body;
+      const new{{pascalCase name}}Success = this.{{camelCase name}}Service.create{{pascalCase name}}({{camelCase name}});
+      return res.status(httpStatus.CREATED).json(new{{pascalCase name}}Success);
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 
-  update = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const {{camelCase name}} = req.body;
+  update = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const {{camelCase name}} = req.body;
 
-    this.{{camelCase name}}Service.update{{pascalCase name}}({ id, ...{{camelCase name}} });
-    return res.json().status(202);
+      const {{camelCase name}}Updated = this.{{camelCase name}}Service.update{{pascalCase name}}({
+         id, ...{{camelCase name}} 
+      });
+      return res.status(httpStatus.OK).json({{camelCase name}}Updated);
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 
-  remove = (req: Request, res: Response) => {
-    const { id } = req.params;
-    this.{{camelCase name}}Service.remove{{pascalCase name}}(id);
-    return res.json().status(202);
+  remove = (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      this.{{camelCase name}}Service.remove{{pascalCase name}}(id);
+      return res.status(httpStatus.NO_CONTENT).json();
+    } catch ({ errType, errMessage }) {
+      res.locals.errType = errType;
+      res.locals.errMessage = errMessage;
+      return next();
+    }
   };
 }

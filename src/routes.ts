@@ -5,6 +5,6 @@ import UserRoutes from './users/user.routes';
 const routes = Router();
 
 routes.use('/users', UserRoutes);
-// New routes are automatically added here by plop (don't remove this comment)
+// New routes are added automatically here by plop (don't remove this comment)
 
 export default routes;

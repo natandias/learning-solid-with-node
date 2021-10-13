@@ -66,6 +66,11 @@ export default function (plop: NodePlopAPI) {
       },
       {
         type: 'add',
+        path: '../src/{{camelCase name}}/interfaces/dtos/findAll{{pascalCase name}}.dto.ts',
+        templateFile: 'templates/interfaces/dtos/findAllDto.ts.hbs',
+      },
+      {
+        type: 'add',
         path: '../src/{{camelCase name}}/repositories/{{camelCase name}}.repository.ts',
         templateFile: 'templates/repositories/mainRepository.ts.hbs',
       },
@@ -88,9 +93,9 @@ export default function (plop: NodePlopAPI) {
         type: 'append',
         path: '../src/routes.ts',
         pattern:
-          "// New routes are import automatically here by plop (don't remove this comment)",
+          "// New routes are automatically imported here by plop (don't remove this comment)",
         template:
-          "// New routes are import automatically here by plop (don't remove this comment)",
+          "// New routes are automatically imported here by plop (don't remove this comment)",
       },
       {
         type: 'append',
@@ -112,7 +117,7 @@ export default function (plop: NodePlopAPI) {
         type: 'modify',
         path: '../src/routes.ts',
         pattern:
-          "// New routes are automatically added here by plop (don't remove this comment)",
+          "// New routes are added automatically here by plop (don't remove this comment)",
         template:
           "routes.use('/{{dashCase name}}', {{pascalCase name}}Routes);",
       },
