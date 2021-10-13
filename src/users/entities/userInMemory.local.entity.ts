@@ -14,7 +14,7 @@ class UserEntity {
 
   private updatedAt: Date;
 
-  private deletedAt: Date | undefined;
+  private deletedAt: Date | null;
 
   public create({ name, age, city }: CreateUser) {
     this.id = uuidv4();
@@ -23,6 +23,7 @@ class UserEntity {
     this.city = city;
     this.createdAt = new Date();
     this.updatedAt = new Date();
+    this.deletedAt = null;
 
     return this.get();
   }

@@ -22,6 +22,6 @@ describe('UserEntity', () => {
     expect(user.city).toBe('Salvador');
     expect(user.createdAt).toBeTruthy();
     expect(user.updatedAt).toBeTruthy();
-    expect(user.deletedAt).toBeFalsy();
+    expect(user.deletedAt).toBeNull();
   });
 });

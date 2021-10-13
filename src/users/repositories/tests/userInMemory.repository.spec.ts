@@ -20,7 +20,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -45,14 +45,14 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user1,
     });
     expect(usersList[1]).toEqual({
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user2,
     });
     expect(userEntity.create).toBeCalledTimes(2);
@@ -63,7 +63,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -91,7 +91,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user2,
     });
     expect(userEntity.create).toBeCalledTimes(2);
@@ -113,7 +113,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user3,
     });
     expect(userEntity.create).toBeCalledTimes(3);
@@ -130,7 +130,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -147,7 +147,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     });
   });
@@ -165,7 +165,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -182,7 +182,7 @@ describe('UserInMemoryRepository', () => {
       city: 'Salvador',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
     });
   });
 
@@ -191,7 +191,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -209,7 +209,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -233,11 +233,11 @@ describe('UserInMemoryRepository', () => {
   // Update
   it('should update user', async () => {
     userEntity.create = jest.fn((user: CreateUser) => ({
+      ...user,
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
-      ...user,
+      deletedAt: null,
     }));
 
     const user = await userRepository.createUser({
@@ -256,7 +256,7 @@ describe('UserInMemoryRepository', () => {
       name: 'Natan',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
     });
   });
 
@@ -274,7 +274,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
@@ -289,11 +289,11 @@ describe('UserInMemoryRepository', () => {
     });
 
     expect(userUpdated).toEqual({
-      id: '1234',
       ...user,
+      id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
     });
   });
 
@@ -303,7 +303,7 @@ describe('UserInMemoryRepository', () => {
       id: '1234',
       createdAt: currentDate,
       updatedAt: currentDate,
-      deletedAt: undefined,
+      deletedAt: null,
       ...user,
     }));
 
